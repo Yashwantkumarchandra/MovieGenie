@@ -5,10 +5,17 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { auth } from "../utils/firebase";
+import { updateProfile } from "firebase/auth";
+import { useDispatch } from "react-redux";
+import { addUser } from "../utils/UserSlice";
 
 const Login = () => {
   const [isSignIn, setIsSignIn] = useState();
   const [errorMsg, setErrorMsg] = useState();
+  const email = useRef(null);
+  const password = useRef(null);
+  const name = useRef(null);
+  const dispatch = useDispatch();
 
   const handleButtonClick = () => {
     const message = CheckValidateData(
@@ -27,7 +34,26 @@ const Login = () => {
         .then((userCredential) => {
           // Signed up
           const user = userCredential.user;
-          console.log(user);
+          updateProfile(user, {
+            displayName: name.current.value,
+          })
+            .then(() => {
+              // Profile updated!
+              const { uid, email, displayName } = auth.currentUser;
+              dispatch(
+                addUser({
+                  uid: uid,
+                  email: email,
+                  displayName: displayName,
+                })
+              );
+            })
+            .catch((error) => {
+              // An error occurred
+              const errorCode = error.code;
+              const errorMessage = error.message;
+              setErrorMsg(errorCode + " " + errorMessage);
+            });
         })
         .catch((error) => {
           const errorCode = error.code;
@@ -53,9 +79,6 @@ const Login = () => {
     }
   };
 
-  const email = useRef(null);
-  const password = useRef(null);
-
   const toggleSignInForm = () => {
     setIsSignIn(!isSignIn);
   };
@@ -73,6 +96,7 @@ const Login = () => {
             <input
               type="text"
               id="name"
+              ref={name}
               required
               className="w-full h-10 px-4 text-sm peer bg-gray-800 outline-none rounded text-white"
             />
@@ -101,7 +125,7 @@ const Login = () => {
         </div>
         <div className="w-full relative group mt-7">
           <input
-            type="text"
+            type="password"
             ref={password}
             id="password"
             required
