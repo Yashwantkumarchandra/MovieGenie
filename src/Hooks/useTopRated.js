@@ -12,7 +12,6 @@ const useTopRated = () => {
     );
     const json = await data.json();
     dispatch(addTopRatedVideo(json.results));
-    console.log(json.results);
   };
   useEffect(() => {
     getTopRated();
