@@ -1,9 +1,10 @@
 import { useEffect } from "react";
 import { API_OPTIONS } from "../utils/Constant";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addTrendingTvSeries } from "../utils/MovieSlice";
 
 const useTrendingTv = () => {
+  const trendingTv = useSelector((store) => store.movies.trendingTvSeries);
   const dispatch = useDispatch();
   const getTrendingTv = async () => {
     const data = await fetch(
@@ -14,7 +15,7 @@ const useTrendingTv = () => {
     dispatch(addTrendingTvSeries(json.results));
   };
   useEffect(() => {
-    getTrendingTv();
+    !trendingTv && getTrendingTv();
   }, []);
 };
 
