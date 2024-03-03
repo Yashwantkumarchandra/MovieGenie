@@ -3,7 +3,7 @@ import OpenAI from "openai";
 // const OpenAI = require("openai");
 
 const openai = new OpenAI({
-  apiKey: "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",
+  apiKey: process.env.REACT_APP_OPENAI_KEY,
   dangerouslyAllowBrowser: true, // This is the default and can be omitted
 });
 

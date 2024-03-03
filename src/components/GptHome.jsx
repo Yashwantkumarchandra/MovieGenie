@@ -4,7 +4,7 @@ import GptMovieSuggestion from "./GptMovieSuggestion";
 
 const GptHome = () => {
   return (
-    <div>
+    <div className="bg-fixed">
       <GptSearch />
       <GptMovieSuggestion />
     </div>
